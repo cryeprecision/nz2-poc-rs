@@ -2,6 +2,16 @@
 
 A (hopefully) spec-compliant proof-of-concept implementation of the NZ2 specification in Rust.
 
+## Related Repositories
+
+- [NZ2 Specification](https://github.com/cryeprecision/nz2-spec)
+- [**NZ2 Proof-of-Concept (Rust)**](https://github.com/cryeprecision/nz2-poc-rs)
+- [NNTP Client Library (Rust)](https://github.com/cryeprecision/nntp-rs)
+- [rapidyenc (Fork)](https://github.com/cryeprecision/rapidyenc)
+- [rapidyenc Rust Bindings](https://github.com/cryeprecision/rapidyenc-rs)
+- [sabctools (Fork)](https://github.com/cryeprecision/sabctools)
+- [sabnzbd (Fork)](https://github.com/cryeprecision/sabnzbd)
+
 ## Building
 
 Build the project using `cargo build --release`, then you can find the build executable at `./target/release/...`.
