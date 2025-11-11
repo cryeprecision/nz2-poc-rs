@@ -37,10 +37,13 @@ enum Args {
         /// News server password
         #[arg(long)]
         news_password: String,
+        /// Number of concurrent NNTP connections
         #[arg(long, default_value_t = DEFAULT_CONNECTIONS)]
         connections: usize,
+        /// Newsgroup(s) to upload to, specify multiple times for multiple groups. Default is "alt.test".
         #[arg(long)]
         group: Vec<String>,
+        /// Disable progress bars
         #[arg(long, default_value_t = false)]
         no_progress: bool,
     },
@@ -61,8 +64,10 @@ enum Args {
         /// News server password
         #[arg(long)]
         news_password: String,
+        /// Number of concurrent NNTP connections
         #[arg(long, default_value_t = DEFAULT_CONNECTIONS)]
         connections: usize,
+        /// Disable progress bars
         #[arg(long, default_value_t = false)]
         no_progress: bool,
     },
