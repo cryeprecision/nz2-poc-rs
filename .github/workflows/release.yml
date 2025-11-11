@@ -1,0 +1,69 @@
+name: Release
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Get the release version from the tag
+        if: env.VERSION == ''
+        run: |
+          version=$(echo "${{ github.ref_name }}" | sed 's/^v//')
+          echo "VERSION=$version" >> $GITHUB_ENV
+      - name: Show the version
+        run: |
+          echo "version is: $VERSION"
+      - name: Check that tag version and Cargo.toml version are the same
+        run: |
+          if ! grep -q "version = \"$VERSION\"" Cargo.toml; then
+            echo "version does not match Cargo.toml" >&2
+            exit 1
+          fi
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease_flag=""
+          if echo "$VERSION" | grep -q "-beta."; then
+            prerelease_flag="--prerelease"
+          fi
+          gh release create "v$VERSION" --draft --verify-tag \
+            --title "v$VERSION" "$prerelease_flag"
+    outputs:
+      version: ${{ env.VERSION }}
+
+  build-release:
+    needs: ['create-release']
+    strategy:
+      matrix:
+        toolchain: [stable, nightly]
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
+      - name: Build release binary
+        run: cargo build --release
+      - name: Upload release binary
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${{ needs.create-release.outputs.version }}"
+          if [[ "${{ matrix.os }}" == windows-* ]]; then
+            bin="target/release/cli-$version-x86_64-${{ matrix.toolchain }}.exe"
+            mv "target/release/cli.exe" "$bin"
+          else
+            bin="target/release/cli-$version-x86_64-${{ matrix.toolchain }}"
+            mv "target/release/cli" "$bin"
+          fi
+          gh release upload "v$version" "$bin"

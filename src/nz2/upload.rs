@@ -320,7 +320,12 @@ pub async fn upload_dir(
     ctx.bars.remove(&files_bar);
 
     ctx.suspend(|| {
-        tracing::info!("All files uploaded successfully");
+        if let Some(err) = last_error {
+            tracing::error!("At least one uploader task failed!");
+            tracing::error!("Last error: {err:?}");
+        } else {
+            tracing::info!("All files uploaded successfuly");
+        }
     });
 
     // We're done, hooray!

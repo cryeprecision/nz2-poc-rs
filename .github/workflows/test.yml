@@ -1,0 +1,24 @@
+name: Test
+on: [push]
+
+env:
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        toolchain: [stable, nightly]
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
+      - run: cargo test --release
+      - run: cargo clippy
+      - run: cargo fmt --check

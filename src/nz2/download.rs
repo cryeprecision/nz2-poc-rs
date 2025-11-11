@@ -311,7 +311,12 @@ pub async fn download_nz2(
     ctx.bars.remove(&files_bar);
 
     ctx.suspend(|| {
-        tracing::info!("All files uploaded successfuly");
+        if let Some(err) = last_error {
+            tracing::error!("At least one downloader task failed!");
+            tracing::error!("Last error: {err:?}");
+        } else {
+            tracing::info!("All files downloaded successfuly");
+        }
     });
 
     Ok(())
