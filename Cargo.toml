@@ -1,0 +1,39 @@
+[package]
+name = "nz2-poc-rs"
+version = "0.1.0-beta.1"
+edition = "2024"
+
+[dependencies]
+anyhow = { version = "1.0" }
+walkdir = { version = "2.5" }
+clap = { version = "4.5", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+futures = { version = "0.3" }
+human-repr = { version = "1.1" }
+tracing = { version = "0.1" }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+async-channel = { version = "2.5" }
+indicatif = { version = "0.18" }
+chrono = { version = "0.4" }
+
+rand = { version = "0.9" }
+rand_chacha = { version = "0.9" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+base64 = { version = "0.22" }
+chacha20poly1305 = { version = "0.11.0-rc.1" }
+hkdf = { version = "0.13.0-rc.2" }
+sha2 = { version = "0.11.0-rc.2" }
+rapidyenc = { version = "0.1.0-beta.1", rev = "f023c1a", git = "https://github.com/cryeprecision/rapidyenc-rs.git" }
+nntp-rs = { version = "0.1.0-beta.1", rev = "f882bf3", git = "https://github.com/cryeprecision/nntp-rs.git" }
+
+[profile.dev.package.tracing-attributes]
+opt-level = 3
+
+[dev-dependencies]
+criterion = { version = "0.7", features = ["html_reports"] }
+rayon = { version = "1.11" }
+
+[[bench]]
+name = "bench_main"
+harness = false
