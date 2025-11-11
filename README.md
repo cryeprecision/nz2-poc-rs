@@ -1,6 +1,6 @@
 # NZ2 Proof-of-Concept
 
-A (hopefully) spec-compliant proof-of-concept implementation of the NZ2 specification in Rust.
+A (hopefully) spec-compliant implementation of the [NZ2 specification](https://github.com/cryeprecision/nz2-spec) in Rust.
 
 ## Related Repositories
 
@@ -14,7 +14,7 @@ A (hopefully) spec-compliant proof-of-concept implementation of the NZ2 specific
 
 ## Building
 
-Build the project using `cargo build --release`, then you can find the build executable at `./target/release/...`.
+Build the project using `cargo build --release`, then you can find the build executable at `./target/release/cli` (or `./target/release/cli.exe` on Windows).
 
 ### Build Requirements
 
@@ -24,6 +24,32 @@ Build the project using `cargo build --release`, then you can find the build exe
 ## Usage
 
 This project uses [tracing](https://docs.rs/tracing/latest/tracing/) for logging. You can set the logging level using the `RUST_LOG` environment variable (see [`EnvFilter`](https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html)).
+
+### Uploading
+
+The following command uploads all files in `./data` to the specified NNTP server and creates an NZ2 file at `./foobar.nz2`. A file `./data/foo/bar.txt` is referenced as `foo/bar.txt` in the NZ2 file. For more options, run `cli upload --help`.
+
+```text
+cli upload \
+    --news-server news.example.com \
+    --news-username 'your_username' \
+    --news-password 'your_password' \
+    --input-dir ./data \
+    --output-file ./foobar.nz2
+```
+
+### Downloading
+
+The following command downloads all files from the specified NZ2 file and saves them to `./data`. A file `foo/bar.txt` in the NZ2 file is saved to `./data/foo/bar.txt`. For more options, run `cli download --help`.
+
+```text
+cli download \
+    --news-server news.example.com \
+    --news-username 'your_username' \
+    --news-password 'your_password' \
+    --input-file ./foobar.nz2 \
+    --output-dir ./data
+```
 
 ## NNTP RFCs
 
@@ -45,3 +71,4 @@ Tools like [`SABnzbd`](https://sabnzbd.org/) could store a list of trusted minis
 ## Credits
 
 - [animetosho/rapidyenc](https://github.com/animetosho/rapidyenc): A SIMD implementation of yEnc.
+  - Used through the [rapidyenc-rs](https://github.com/cryeprecision/rapidyenc-rs) bindings.
